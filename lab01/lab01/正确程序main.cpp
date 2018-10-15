@@ -4,19 +4,12 @@
 #include<QDebug>
 
 using namespace std;
-
-
 typedef struct{
+    QString name=""; //定义name变量
     QString stu_num="";
-    QString name="";
     qint64 subject1;
     qint64 subject2;
-}stu_data;
-
-void display(QVector<stu_data> *data);
-bool cmp_name(stu_data a,stu_data b);
-bool cmp_subject1(stu_data a,stu_data b);
-bool cmp_subject2(stu_data a,stu_data b);
+    }stu_data;
 
 int main(int argc, char *argv[])
 {
@@ -35,47 +28,36 @@ int main(int argc, char *argv[])
     data.push_back(data_4);
 
   
-    qDebug()<<"原数据:\n";
+    qDebug()<<"排序前:\n";
     display(&data);
 
     QVector<stu_data> sort_name=data;
     sort(sort_name.begin(),sort_name.end(),cmp_name);
-    qDebug()<<"按姓名排序:\n";
+    qDebug()<<"通过姓名排序:\n";
     display(&sort_name);
 
 
     QVector<stu_data> sort_subject1=data;
     sort(sort_subject1.begin(),sort_subject1.end(),cmp_subject1);
-    qDebug()<<"按课程一排序：\n";
+    qDebug()<<"通过课程一排序：\n";
     display(&sort_subject1);
 
     QVector<stu_data> sort_subject2=data;
     sort(sort_subject2.begin(),sort_subject2.end(),cmp_subject2);
-    qDebug()<<"按课程二排序：\n";
+    qDebug()<<"通过课程二排序：\n";
     display(&sort_subject2);
-
     return a.exec();
 }
-
-
-void display(QVector<stu_data> *data)
-{
-    qDebug()<<"学号"<<"     "<<"姓名"<<"     "<<"课程1"<<"  "<<"课程2\n";
-    for(QVector<stu_data>::iterator m = data->begin(); m != data->end(); m++ )//m is temp struct
-    {
-        qDebug()<<m->stu_num<<"   "<<m->name<<"    "<<m->subject1<<"    "<<m->subject2<<"\n";
-
-    }
-    cout<<endl;
-}
-
-
+void display(QVector<stu_data> *data);
+bool cmp_name(stu_data a,stu_data b);
+bool cmp_subject1(stu_data a,stu_data b);
+bool cmp_subject2(stu_data a,stu_data b);
 bool cmp_name(stu_data a,stu_data b)
 {
    if(a.name>=b.name)
    {
        return 0;
-   }
+    }
    else
    {
        return 1;
@@ -107,6 +89,15 @@ bool cmp_subject2(stu_data a,stu_data b)
         return 0;
     }
 }
+void display(QVector<stu_data> *data)
+    
+    {
+    qDebug()<<"学号"<<"     "<<"姓名"<<"     "<<"课程1"<<"  "<<"课程2\n";
+    for(QVector<stu_data>::iterator m = data->begin(); m != data->end(); m++ ){
+    qDebug()<<m->stu_num<<"   "<<m->name<<"    "<<m->subject1<<"    "<<m->subject2<<"\n";
+    }
+    cout<<endl;
+    }
 
 
 
