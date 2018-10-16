@@ -113,6 +113,7 @@ public:
     ScoreSorter(QString dataFile); //定义ScoreSorter构造函数
     void readFile();               //定义读取文件函数
     void doSort();                 //定义排序函数
+    void sorted_data();            //定义输出到文件函数
 private:
 	QStringList  Listtitle;        //数据表头
 	QString FileName;
@@ -126,7 +127,7 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 }
 
 void ScoreSorter::readFile()       //读文件函数
-{
+    {
     QFile F(FileName);
     if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -137,24 +138,26 @@ void ScoreSorter::readFile()       //读文件函数
 
     studData momentdata;
     QString Ltitile(file.readLine());
-    Listtitile=Ltitile.split(" ");
+    Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);
     while(!F.atEnd())
     {
-    	QString s(F.readLine());
-    	momentdata.stud_Data=s.split(" ");
-    	data.push_back(momentdata);
+    	QString sh(F.readLine());
+    	momentdata.stud_Data=s.split(" ",QString::SkipEmptyParts);
+    	if((momentdata.stud_Data).last()=="\n")momentdata.stud_Data.removeLast();
+    	if(momentdata.stud_Data) continue;
+    	data.append(momentdata);
     }
     F.close();
-    qDebug()data;
+    qDebug()<<Listtitile.size();
     qDebug().noquote().nospace()<<"读取文件完成"<<FileName；
- }	
+    }
 
 void ScoreSorter::doSort()         //排序函数
 {
 
 }
 
-
+void sorted_data()                  //输出到文本
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
