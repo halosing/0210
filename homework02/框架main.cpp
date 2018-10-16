@@ -42,11 +42,15 @@ enum SortKind{
 
 
 typedef struct{
-    // 请补全结构定义
+    QStringList stud;//结构定义
 } studData;
 
-QDebug operator<< (QDebug d, const studData &data) {
-    // 请补全运算符重载函数，使其可以直接输出studData结构
+QDebug operator<< (QDebug d, const studData &data) 
+{
+    for(int i=1;i<=data.stud.size();i++)    // 补全运算符重载函数，使其可以直接输出studData结构
+    {
+    	d<<data.stud.at(i) ;
+    }
     return d;
 }
 
