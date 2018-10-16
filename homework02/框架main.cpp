@@ -42,19 +42,19 @@ enum SortKind{
 
 
 typedef struct{
-    QStringList stud;//结构定义
+    QStringList stud_Data;//结构定义
 } studData;
 
 QDebug operator<< (QDebug d, const studData &data) 
 {
     for(int i=1;i<=data.stud.size();i++)    // 补全运算符重载函数，使其可以直接输出studData结构
     {
-    	d<<data.stud.at(i) ;
+    	 d.noquote().nospace()<<QString(data.stud_Data.at(i))<<"\t" ;
     }
     return d;
 }
 
-// 比较类，用于std::sort第三个参数
+// 比较列位置，用于std::sort第三个参数
 class myCmp {
 public:
     myCmp(int selectedColumn) { this->currentColumn = selectedColumn; }
@@ -63,34 +63,97 @@ private:
     int currentColumn;
 };
 
-bool myCmp::operator()(const studData &d1, const studData &d2)
+bool myCmp::operator()(const studData &d1, const studData &d2)    //重载规则，switch与上面的enum匹配
 {
     bool result = false;
     quint32 sortedColumn = 0x00000001<<currentColumn;
     switch (sortedColumn) {
-    case SK::col01:
-    // ...
-    // 请补全运算符重载函数
-    // ...
-    //
+        case SK::col01: result=d1.stud_Data.at(1)>d2.stud_Data.at(1);   break;
+        case SK::col02: result=d1.stud_Data.at(2)>d2.stud_Data.at(2);   break;
+        case SK::col03: result=d1.stud_Data.at(3)>d2.stud_Data.at(3);   break;
+        case SK::col04: result=d1.stud_Data.at(4)>d2.stud_Data.at(4);   break;
+        case SK::col05: result=d1.stud_Data.at(5)>d2.stud_Data.at(5);   break;
+        case SK::col06: result=d1.stud_Data.at(6)>d2.stud_Data.at(6);   break;
+        case SK::col07: result=d1.stud_Data.at(7)>d2.stud_Data.at(7);   break;
+        case SK::col08: result=d1.stud_Data.at(8)>d2.stud_Data.at(8);   break;
+        case SK::col09: result=d1.stud_Data.at(9)>d2.stud_Data.at(9 );  break;
+        case SK::col10: result=d1.stud_Data.at(10)>d2.stud_Data.at(10); break;
+        case SK::col11: result=d1.stud_Data.at(11)>d2.stud_Data.at(11); break;
+        case SK::col12: result=d1.stud_Data.at(12)>d2.stud_Data.at(12); break;
+        case SK::col13: result=d1.stud_Data.at(13)>d2.stud_Data.at(13); break;
+        case SK::col14: result=d1.stud_Data.at(14)>d2.stud_Data.at(14); break;
+        case SK::col15: result=d1.stud_Data.at(15)>d2.stud_Data.at(15); break;
+        case SK::col16: result=d1.stud_Data.at(16)>d2.stud_Data.at(16); break;
+        case SK::col17: result=d1.stud_Data.at(17)>d2.stud_Data.at(17); break;
+        case SK::col18: result=d1.stud_Data.at(18)>d2.stud_Data.at(18); break;
+        case SK::col19: result=d1.stud_Data.at(19)>d2.stud_Data.at(19); break;
+        case SK::col20: result=d1.stud_Data.at(20)>d2.stud_Data.at(20); break;
+        case SK::col21: result=d1.stud_Data.at(21)>d2.stud_Data.at(21); break;
+        case SK::col22: result=d1.stud_Data.at(22)>d2.stud_Data.at(22); break;
+        case SK::col23: result=d1.stud_Data.at(23)>d2.stud_Data.at(23 );break;
+        case SK::col24: result=d1.stud_Data.at(24)>d2.stud_Data.at(24 );break;
+        case SK::col25: result=d1.stud_Data.at(25)>d2.stud_Data.at(25 );break;
+        case SK::col26: result=d1.stud_Data.at(26)>d2.stud_Data.at(26 );break;
+        case SK::col27: result=d1.stud_Data.at(27)>d2.stud_Data.at(27 );break;
+        case SK::col28: result=d1.stud_Data.at(28)>d2.stud_Data.at(28 );break;
+        case SK::col29: result=d1.stud_Data.at(29)>d2.stud_Data.at(29 );break;
+        case SK::col30: result=d1.stud_Data.at(30)>d2.stud_Data.at(30 );break;
+        case SK::col31: result=d1.stud_Data.at(31)>d2.stud_Data.at(31 );break;
+        case SK::col32: result=d1.stud_Data.at(32)>d2.stud_Data.at(32 );break;
+    
     }
     return result;
 
 }
 
 
-class ScoreSorter
+class ScoreSorter  //此类完成排序及其他功能
 {
 public:
-    ScoreSorter(QString dataFile);
-    // ...
-    // 请补全该类，使其实现上述要求
-    // ...
+    ScoreSorter(QString dataFile); //定义ScoreSorter构造函数
+    void readFile();               //定义读取文件函数
+    void doSort();                 //定义排序函数
+private:
+	QStringList  Listtitle;        //数据表头
+	QString FileName;
+    QList<studData>   data;
+    
+}；
+
+ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
+{
+    FileName=dataFile;
 }
 
-// 请补全
-ScoreSorter::ScoreSorter(QString dataFile){
+void ScoreSorter::readFile()       //读文件函数
+{
+    QFile F(FileName);
+    if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+    	qDebug()<<"文件打开失败"<<endl;
+    	return -1;
+    }
+    QDebug().noquote().nospace()<<"开始读取文件"<<FileName;
+
+    studData momentdata;
+    QString Ltitile(file.readLine());
+    Listtitile=Ltitile.split(" ");
+    while(!F.atEnd())
+    {
+    	QString s(F.readLine());
+    	momentdata.stud_Data=s.split(" ");
+    	data.push_back(momentdata);
+    }
+    F.close();
+    qDebug()data;
+    qDebug().noquote().nospace()<<"读取文件完成"<<FileName；
+ }	
+
+void ScoreSorter::doSort()         //排序函数
+{
+
 }
+
 
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
