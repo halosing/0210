@@ -3,8 +3,8 @@
 #include <QTextStream>
 #include <QFile>
 
-namespace SK {
-enum SortKind{
+namespace SK {       //定义命名空间为SK
+enum SortKind{       //将数据分为不同列
     col01    =   0x00000001<<0,         //!< 第1列
     col02    =   0x00000001<<1,         //!< 第2列
     col03    =   0x00000001<<2,         //!< 第3列
@@ -114,7 +114,6 @@ public:
     void readFile();               //定义读取文件函数
     void doSort();                 //定义排序函数
    
-private:
 	QStringList  Listtitle;        //数据表头
 	QString FileName;              //定义变量
     QList<studData>   data;        //数据
@@ -128,32 +127,45 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 
 void ScoreSorter::readFile()       //读文件函数
     {
-    QFile F(FileName);  //参考QT助手
+    QFile F(this→FileName);  //参考QT助手
     if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-    	qDebug()<<QString("文件%1打开失败").arg(FileName);
-    	return -1;
+    	qDebug().noquote().nospace()<<"文件打开失败"<<endl;
+    	return ;
     }
     QDebug().noquote().nospace()<<"开始读取文件"<<FileName;
+
+    studData momentdata;
+    QString Ltitile(file.readLine());    //读取整行 
+    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取
+   
     while(!F.atEnd())
     {
-    	QString line=F.readLine();
-    	qDebug()<<line;
+    	QString sh(F.readLine());
+    	momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts);
+    	if((momentdata.stud_Data).last()=="\n")
+    	{
+    		momentdata.stud_Data.removeLast();   //读数据
+    	}
+    	if(momentdata.stud_Data) 
+    	continue;
+    	this→data.append(momentdata);  //加数据到data
     }
     F.close();
+    qDebug()<<Listtitile.size();
     qDebug().noquote().nospace()<<"读取文件完成"<<FileName；
-    return 0;
     }
+    
 
 void ScoreSorter::doSort()         //排序输出函数
 {
-	for(int i=1;i<Listtitile.size();i++)
+	for(int i=1;i<this→Listtitile.size();i++)
 	{
-		myCmp thcmp(i-1);
+		myCmp thcmp(i-1);     //初始化排序对象
 		std::sort(data.begin(),data.end(),thcmp);
 		qDebug().noquote().nospace()<<"排序之后输出数据，目前排序第"<<i<<"列："
-		qDebug()<<Listtitile;
-		for(int i=0;i<Listtitile.size();i++)
+		qDebug()<<"     "(this→Listtitile);   //输出表头
+		for(int i=0;i<this→Listtitile.size();i++)
 		{
 		  qDebug()<<data.ai(i);
 		  qDebug()<<"-------------------------------------------------------\n";
@@ -164,14 +176,24 @@ void ScoreSorter::doSort()         //排序输出函数
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
 {
-    // 自定义qDebug
+    QString txtMessage;
+
+
+    QFile F("D:\\sorted_data.txt");
+    if(F.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream out(&F);
+        out<<txtMessage;
+    }
+    file.flush();
+    file.close();
 }
 
 int main()
 {
     qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
 
-    QString datafile = "D：/data.txt";
+    QString datafile = "D：\\data.txt";
 
     // 如果排序后文件已存在，则删除之
     QFile f("sorted_"+datafile);
