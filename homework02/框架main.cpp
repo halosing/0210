@@ -113,9 +113,9 @@ public:
     ScoreSorter(QString dataFile); //定义ScoreSorter构造函数
     void readFile();               //定义读取文件函数
     void doSort();                 //定义排序函数
-   
-	QStringList  Listtitle;        //数据表头
-	QString FileName;              //定义变量
+    void outingdata(quint8 current);  //输出到文本函数
+    QStringList  Listtitle;        //数据表头
+    QString FileName;              //定义变量
     QList<studData>   data;        //数据
     
 }；
@@ -167,16 +167,18 @@ void ScoreSorter::doSort()         //排序输出函数
 		qDebug()<<"     "(this→Listtitile);   //输出表头
 		for(int i=0;i<this→Listtitile.size();i++)
 		{
-		  qDebug()<<data.ai(i);
-		  qDebug()<<"-------------------------------------------------------\n";
-		}
-	}
-
+		qDebug()<<data.ai(i);
+		qDebug()<<"-------------------------------------------------------\n";
+		this→outingdata(i+1); //目前排序规则的数据指到输出函数
+        }
+    }
 }
 
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
+//void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
 {
     QString txtMessage;
+    QMutex mutex;   
+    mutex.lock();  //加锁
     txtMessage = data.ai(i);
     txtMessage += QString("\r\n");
 
@@ -188,11 +190,42 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
     file.flush();
     file.close();
+    mutex.unlock();
+}
+
+void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
+{
+    QFile file("sorted_"+this->datafile);
+
+    file.open(QIODevice::ReadWrite | QIODevice::Append);
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");    //采用UTF-8编码方式
+    stream<<QString("排序后输出，当前排序第 ")<<currentColumn <<QString(" 列：")<<"\r\n";
+
+    
+    for(int k=0;k<this->Lsitttitle.stud.size();k++)  //这样循环输出表头
+    {
+        stream<<"   "<<this->Listtitle.stud.at(k);
+    }
+        stream<<"\r\n";
+
+    for(int i=0;i<this->infor.size();i++)            //输出排序后的数据
+    {
+        for(int k=0;j<this->Listtitle.stud.size();k++)
+        {
+         stream<<this->infor.at(i).stud.at(k)<<"\t";
+        }
+        stream<<"\r\n";
+    }
+    stream<<"------------------------------------------------------------"<<"\r\n\r\n";
+    
+    F.close();
 }
 
 int main()
 {
-    qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
+    //qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
 
     QString datafile = "D：\\data.txt";
 
