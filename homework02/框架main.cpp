@@ -128,7 +128,7 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 
 void ScoreSorter::readFile()       //读文件函数
     {
-    QFile F(FileName);
+    QFile F(FileName);  //参考QT助手
     if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
     {
     	qDebug()<<"文件打开失败"<<endl;
@@ -142,7 +142,7 @@ void ScoreSorter::readFile()       //读文件函数
     while(!F.atEnd())
     {
     	QString sh(F.readLine());
-    	momentdata.stud_Data=s.split(" ",QString::SkipEmptyParts);
+    	momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts);
     	if((momentdata.stud_Data).last()=="\n")momentdata.stud_Data.removeLast();
     	if(momentdata.stud_Data) continue;
     	data.append(momentdata);
@@ -152,13 +152,27 @@ void ScoreSorter::readFile()       //读文件函数
     qDebug().noquote().nospace()<<"读取文件完成"<<FileName；
     }
 
-void ScoreSorter::doSort()         //排序函数
+void ScoreSorter::doSort()         //排序输出函数
 {
+	for(int i=1;i<Listtitile.size();i++)
+	{
+		myCmp thcmp(i-1);
+		std::sort(data.begin(),data.end(),thcmp);
+		qDebug().noquote().nospace()<<"排序之后输出数据，目前排序第"<<i<<"列："
+		qDebug()<<Listtitile;
+		for(int i=0;i<Listtitile.size();i++)
+		{
+		  qDebug()<<data.ai(i);
+		  qDebug()<<"-------------------------------------------------------\n";
+		}
+	}
 
 }
 
-void sorted_data()                  //输出到文本
-
+void sorted_data()                  //输出到文本函数
+{
+	
+}
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     // 自定义qDebug
