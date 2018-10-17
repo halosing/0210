@@ -125,7 +125,7 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
     FileName=dataFile;                      //初始化成员
 }
 
-void ScoreSorter::readFile()
+//void ScoreSorter::readFile()
 {  QFile F(this→FileName);  //参考QT助手 
     if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
     { 
@@ -147,24 +147,57 @@ void ScoreSorter::readFile()
     return 0; 
 } 
 
+void ScoreSorter::readFile()
+{ 
+    QFile F(this→FileName);  //参考QT助手 
+    if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
+    { 
+        qDebug().noquote().nospace()<<"文件打开失败"<<endl; 
+        return ; 
+    } 
+    QDebug().noquote().nospace()<<"开始读取文件"<<FileName; 
+ 
+    studData momentdata; 
+    QString Ltitile(file.readLine());    //读取整行  
+    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取 
+    
+    while(!F.atEnd()) 
+    { 
+        QString sh(F.readLine()); 
+        momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts); 
+        if((momentdata.stud_Data).last()=="\n") 
+        { 
+            momentdata.stud_Data.removeLast();   //读数据 
+        } 
+        if(momentdata.stud_Data)  
+        continue; 
+        this→data.append(momentdata);  //加数据到data 
+    } 
+    F.close(); 
+    qDebug()<<Listtitile.size(); 
+    qDebug().noquote().nospace()<<"读取文件完成"<<FileName； 
+    } 
 
 
 void ScoreSorter::doSort()         //排序输出函数
 {
-	for(int i=1;i<this→Listtitile.size();i++)
+	for(int N=1;N<this→Listtitile.size();N++)
 	{
-		myCmp thcmp(i-1);     //初始化排序对象
+		myCmp thcmp(N-1);     //初始化排序对象
 		std::sort(data.begin(),data.end(),thcmp);
 		qDebug().noquote().nospace()<<"排序之后输出数据，目前排序第"<<i<<"列："
-		qDebug()<<"     "(this→Listtitile);   //输出表头
-		for(int i=0;i<this→Listtitile.size();i++)
+		
+        Listtitile.removeLast();        //删除最后一个"\n"
+        qDebug()<<"  "<<this→oListtitile;    //输出表头
+	
+        for(int N=0;N<this→oListtitile.size();N++)
 		{
-		qDebug()<<data.ai(i);
+		qDebug()<<data.ai(N);
 		qDebug()<<"-------------------------------------------------------\n";
-		this→outingdata(i+1); //目前排序规则的数据指到输出函数
+		this→outingdata(N+1); //目前排序规则的数据指到输出函数
         }
     }
-}
+ }
 
 //void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
 {
