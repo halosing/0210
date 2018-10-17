@@ -49,7 +49,7 @@ QDebug operator<< (QDebug d, const studData &data)
 {
     for(int i=1;i<=data.stud.size();i++)    // 补全运算符重载函数，使其可以直接输出studData结构
     {
-    	 d.noquote().nospace()<<QString(data.stud_Data.at(i))<<"\t" ;
+    	 d.noquote().nospace()<<QString(data.stud_Data.at(i))<<" " ;
     }
     return d;
 }
@@ -124,14 +124,18 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 {
     FileName=dataFile;                      //初始化成员
 }
-//void ScoreSorter::readFile()
-{  QFile F(FileName);  //参考QT助手 
+
+void ScoreSorter::readFile()
+{  QFile F(this→FileName);  //参考QT助手 
     if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
     { 
         qDebug()<<QString("文件%1打开失败").arg(FileName); 
         return -1; 
     } 
     QDebug().noquote().nospace()<<"开始读取文件"<<FileName; 
+    QString Ltitile(file.readLine());    //读取整行 
+    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取
+   
     while(!F.atEnd()) 
     { 
         QString line=F.readLine(); 
@@ -139,40 +143,11 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
     } 
     F.close(); 
     qDebug().noquote().nospace()<<"读取文件完成"<<FileName； 
+    this→data.append(momentdata);  //加数据到data
     return 0; 
 } 
 
-void ScoreSorter::readFile()       //读文件函数
-    {
-    QFile F(this→FileName);  //参考QT助手
-    if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-    	qDebug().noquote().nospace()<<"文件打开失败"<<endl;
-    	return ;
-    }
-    QDebug().noquote().nospace()<<"开始读取文件"<<FileName;
 
-    studData momentdata;
-    QString Ltitile(file.readLine());    //读取整行 
-    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取
-   
-    while(!F.atEnd())
-    {
-    	QString sh(F.readLine());
-    	momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts);
-    	if((momentdata.stud_Data).last()=="\n")
-    	{
-    		momentdata.stud_Data.removeLast();   //读数据
-    	}
-    	if(momentdata.stud_Data) 
-    	continue;
-    	this→data.append(momentdata);  //加数据到data
-    }
-    F.close();
-    qDebug()<<Listtitile.size();
-    qDebug().noquote().nospace()<<"读取文件完成"<<FileName；
-    }
-    
 
 void ScoreSorter::doSort()         //排序输出函数
 {
@@ -196,7 +171,26 @@ void ScoreSorter::doSort()         //排序输出函数
     QString txtMessage;
     QMutex mutex;   
     mutex.lock();  //加锁
-    txtMessage = data.ai(i);
+    QByteArray txtMessage=msg.toLocal8Bit();
+        switch (type) 
+        {
+            case QtDebugMsg:
+            fprintf(stderr, "Debug: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            break;
+            case QtInfoMsg:
+            fprintf(stderr, "Info: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            break;
+            case QtWarningMsg:
+            fprintf(stderr, "Warning: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            break;
+            case QtCriticalMsg:
+            fprintf(stderr, "Critical: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            break;
+            case QtFatalMsg:
+            fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            abort();
+        } 
+        
     txtMessage += QString("\r\n");
 
     QFile F("D:\\sorted_data.txt");
@@ -220,17 +214,17 @@ void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
     stream<<QString("排序后输出，当前排序第 ")<<current<<QString(" 列：")<<"\r\n";
 
     
-    for(int k=0;k<this->Lsitttitle.stud.size();k++)  //这样循环输出表头
+    for(int w=0;w<this->Lsitttitle.stud.size();w++)  //这样循环输出表头
     {
         stream<<"   "<<this->Listtitle.stud.at(k);
     }
         stream<<"\r\n";
 
-    for(int i=0;i<this->infor.size();i++)            //输出排序后的数据
+    for(int k=0;k<this->data.size();k++)            //输出排序后的数据
     {
         for(int k=0;j<this->Listtitle.stud.size();k++)
         {
-         stream<<this->infor.at(i).stud.at(k)<<"\t";
+         stream<<this->data.at(w).stud.at(k)<<"\t";
         }
         stream<<"\r\n";
     }
