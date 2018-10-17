@@ -124,6 +124,23 @@ ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 {
     FileName=dataFile;                      //初始化成员
 }
+//void ScoreSorter::readFile()
+{  QFile F(FileName);  //参考QT助手 
+    if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
+    { 
+        qDebug()<<QString("文件%1打开失败").arg(FileName); 
+        return -1; 
+    } 
+    QDebug().noquote().nospace()<<"开始读取文件"<<FileName; 
+    while(!F.atEnd()) 
+    { 
+        QString line=F.readLine(); 
+        qDebug()<<line; 
+    } 
+    F.close(); 
+    qDebug().noquote().nospace()<<"读取文件完成"<<FileName； 
+    return 0; 
+} 
 
 void ScoreSorter::readFile()       //读文件函数
     {
@@ -196,12 +213,11 @@ void ScoreSorter::doSort()         //排序输出函数
 void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
 {
     QFile file("sorted_"+this->datafile);
-
     file.open(QIODevice::ReadWrite | QIODevice::Append);
-
     QTextStream stream(&file);
+    
     stream.setCodec("UTF-8");    //采用UTF-8编码方式
-    stream<<QString("排序后输出，当前排序第 ")<<currentColumn <<QString(" 列：")<<"\r\n";
+    stream<<QString("排序后输出，当前排序第 ")<<current<<QString(" 列：")<<"\r\n";
 
     
     for(int k=0;k<this->Lsitttitle.stud.size();k++)  //这样循环输出表头
