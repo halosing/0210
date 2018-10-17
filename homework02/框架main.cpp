@@ -177,7 +177,8 @@ void ScoreSorter::doSort()         //排序输出函数
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
 {
     QString txtMessage;
-
+    txtMessage = data.ai(i);
+    txtMessage += QString("\r\n");
 
     QFile F("D:\\sorted_data.txt");
     if(F.open(QIODevice::WriteOnly | QIODevice::Append))
