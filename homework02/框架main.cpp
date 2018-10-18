@@ -45,11 +45,11 @@ typedef struct{
     QStringList stud_Data;//结构定义
 } studData;
 
-QDebug operator<< (QDebug d, const studData &data) 
+QDebug operator<< (QDebug d, const studData &data)
 {
-    for(int i=1;i<=data.stud.size();i++)    // 补全运算符重载函数，使其可以直接输出studData结构
+    for(int i=0;i<=data.stud_Data.size();i++)    // 补全运算符重载函数，使其可以直接输出studData结构
     {
-    	 d.noquote().nospace()<<QString(data.stud_Data.at(i))<<" " ;
+         d.noquote().nospace()<<QString(data.stud_Data.at(i))<<" " ;
     }
     return d;
 }
@@ -100,7 +100,7 @@ bool myCmp::operator()(const studData &d1, const studData &d2)    //重载规则
         case SK::col30: result=d1.stud_Data.at(30)>d2.stud_Data.at(30 );break;
         case SK::col31: result=d1.stud_Data.at(31)>d2.stud_Data.at(31 );break;
         case SK::col32: result=d1.stud_Data.at(32)>d2.stud_Data.at(32 );break;
-    
+
     }
     return result;
 
@@ -114,156 +114,135 @@ public:
     void readFile();               //定义读取文件函数
     void doSort();                 //定义排序函数
     void outingdata(quint8 current);  //输出到文本函数
+private:
     QStringList  Listtitle;        //数据表头
     QString FileName;              //定义变量
     QList<studData>   data;        //数据
-    
+
 }；
 
 ScoreSorter::ScoreSorter(QString dataFile)  //带参数scoresorter构造函数
 {
-    FileName=dataFile;                      //初始化成员
+    this->FileName=dataFile;                      //初始化成员
 }
 
-//void ScoreSorter::readFile()
-{  QFile F(this→FileName);  //参考QT助手 
-    if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
-    { 
-        qDebug()<<QString("文件%1打开失败").arg(FileName); 
-        return -1; 
-    } 
-    QDebug().noquote().nospace()<<"开始读取文件"<<FileName; 
-    QString Ltitile(file.readLine());    //读取整行 
-    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取
-   
-    while(!F.atEnd()) 
-    { 
-        QString line=F.readLine(); 
-        qDebug()<<line; 
-    } 
-    F.close(); 
-    qDebug().noquote().nospace()<<"读取文件完成"<<FileName； 
-    this→data.append(momentdata);  //加数据到data
-    return 0; 
-} 
+
 
 void ScoreSorter::readFile()
-{ 
-    QFile F(this→FileName);  //参考QT助手 
-    if (!F.open(QIODevice::ReadOnly | QIODevice::Text)) 
-    { 
-        qDebug().noquote().nospace()<<"文件打开失败"<<endl; 
-        return ; 
-    } 
-    QDebug().noquote().nospace()<<"开始读取文件"<<FileName; 
- 
-    studData momentdata; 
-    QString Ltitile(file.readLine());    //读取整行  
-    this→Listtitile=Ltitile.split(" "，QString::SkipEmptyParts);   //按空格方式读取 
-    
-    while(!F.atEnd()) 
-    { 
-        QString sh(F.readLine()); 
-        momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts); 
-        if((momentdata.stud_Data).last()=="\n") 
-        { 
-            momentdata.stud_Data.removeLast();   //读数据 
-        } 
-        if(momentdata.stud_Data)  
-        continue; 
-        this→data.append(momentdata);  //加数据到data 
-    } 
-    F.close(); 
-    qDebug()<<Listtitile.size(); 
-    qDebug().noquote().nospace()<<"读取文件完成"<<FileName； 
-    } 
+{
+    QFile F(this->FileName);  //参考QT助手
+    if (!F.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug().noquote().nospace()<<"文件打开失败"<<endl;
+        return ;
+    }
+    QDebug().noquote().nospace()<<"开始读取文件"<<FileName;
+
+    studData momentdata;
+    QString Ltitile(F.readLine());    //读取整行
+    this->Listtitle=Ltitile.split(" ",QString::SkipEmptyParts);   //按空格方式读取，分割数据
+
+    while(!F.atEnd())  //读数据
+    {
+        QString sh(F.readLine());
+        momentdata.stud_Data=sh.split(" ",QString::SkipEmptyParts);
+        if((momentdata.stud_Data).last()=="\n")
+        {
+            momentdata.stud_Data.removeLast();   //读数据
+        }
+        if(momentdata.stud_Data)continue;
+        this->data.append(momentdata);  //加数据到data
+    }
+    F.close();
+
+    qDebug().noquote().nospace()<<"读取文件完成"<<FileName;
+}
 
 
 void ScoreSorter::doSort()         //排序输出函数
 {
-	for(int N=1;N<this→Listtitile.size();N++)
-	{
-		myCmp thcmp(N-1);     //初始化排序对象
-		std::sort(data.begin(),data.end(),thcmp);
-		qDebug().noquote().nospace()<<"排序之后输出数据，目前排序第"<<i<<"列："
-		
-        Listtitile.removeLast();        //删除最后一个"\n"
-        qDebug()<<"  "<<this→oListtitile;    //输出表头
-	
-        for(int N=0;N<this→oListtitile.size();N++)
-		{
-		qDebug()<<data.ai(N);
-		qDebug()<<"-------------------------------------------------------\n";
-		this→outingdata(N+1); //目前排序规则的数据指到输出函数
+    for(int i=1;i<this->Listtitle.size();i++)
+    {
+        myCmp thcmp(i-1);     //初始化排序对象
+        std::sort(data.begin(),data.end(),thcmp);
+        qDebug().noquote().nospace()<<"排序之后输出数据，目前排序第"<<i<<"列："
+
+        qDebug()<<"  "<<this->Listtitle;    //输出表头
+
+        for(int i=0;i<this->Listtitle.size();i++)
+        {
+        qDebug()<<data.at(i);
+        qDebug()<<"-------------------------------------------------------\n";
+        this->outingdata(i); //目前排序规则的数据指到输出函数
         }
     }
  }
 
 //void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
-{
-    QString txtMessage;
-    QMutex mutex;   
-    mutex.lock();  //加锁
-    QByteArray txtMessage=msg.toLocal8Bit();
-        switch (type) 
-        {
-            case QtDebugMsg:
-            fprintf(stderr, "Debug: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            break;
-            case QtInfoMsg:
-            fprintf(stderr, "Info: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            break;
-            case QtWarningMsg:
-            fprintf(stderr, "Warning: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            break;
-            case QtCriticalMsg:
-            fprintf(stderr, "Critical: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            break;
-            case QtFatalMsg:
-            fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            abort();
-        } 
-        
-    txtMessage += QString("\r\n");
+//{
+    //QString txtMessage;
+    //QMutex mutex;
+    //mutex.lock();  //加锁
+    //QByteArray txtMessage=msg.toLocal8Bit();
+        //switch (type)
+       // {
+            //case QtDebugMsg:
+           // fprintf(stderr, "Debug: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            //break;
+            //case QtInfoMsg:
+           // fprintf(stderr, "Info: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            //break;
+           // case QtWarningMsg:
+            //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+            //break;
+            //case QtCriticalMsg:
+            //fprintf(stderr, "Critical: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+           // break;
+            //case QtFatalMsg:
+            //fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
+//            abort();
+       // }
 
-    QFile F("D:\\sorted_data.txt");
-    if(F.open(QIODevice::WriteOnly | QIODevice::Append))
-    {
-        QTextStream out(&F);
-        out<<txtMessage;
-    }
-    file.flush();
-    file.close();
-    mutex.unlock();
-}
+   // txtMessage += QString("\r\n");
+
+    //QFile F("D:\\sorted_data.txt");
+    //if(F.open(QIODevice::WriteOnly | QIODevice::Append))
+   // {
+       // QTextStream out(&F);
+        //out<<txtMessage;
+   // }
+   // file.flush();
+   // file.close();
+    //mutex.unlock();
+//}
 
 void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
 {
-    QFile file("sorted_"+this->datafile);
+    QFile file("sorted_"+this->FileName);      //打开文件
     file.open(QIODevice::ReadWrite | QIODevice::Append);
     QTextStream stream(&file);
-    
+
     stream.setCodec("UTF-8");    //采用UTF-8编码方式
     stream<<QString("排序后输出，当前排序第 ")<<current<<QString(" 列：")<<"\r\n";
 
-    
-    for(int w=0;w<this->Lsitttitle.stud.size();w++)  //这样循环输出表头
+
+    for(int i=0;i<this->Listtitle.size();i++)  //这样循环输出表头
     {
-        stream<<"   "<<this->Listtitle.stud.at(k);
+        stream<<this->Listtitle.at(i);
     }
         stream<<"\r\n";
 
-    for(int k=0;k<this->data.size();k++)            //输出排序后的数据
+    for(int i=0;i<this->data.size();i++)            //输出排序后的数据
     {
-        for(int k=0;j<this->Listtitle.stud.size();k++)
+        for(int j=0;j<this->Listtitle.size()-1;j++)
         {
-         stream<<this->data.at(w).stud.at(k)<<"\t";
+         stream<<this->data.at(i).stud_Data.at(j)<<"\t"<<"\t";;
         }
-        stream<<"\r\n";
+        stream<<"\n";
     }
-    stream<<"------------------------------------------------------------"<<"\r\n\r\n";
-    
-    F.close();
+    stream<<"-------------------------------------------------------"<<"r\n";
+
+    file.close();
 }
 
 int main()
