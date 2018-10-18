@@ -248,7 +248,7 @@ void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
 int main()
 {
     //qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
-
+    QCoreApplication a(argc, argv);
     QString datafile = "D：\\data.txt";
 
     // 如果排序后文件已存在，则删除之
