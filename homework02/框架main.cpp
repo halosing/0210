@@ -173,81 +173,58 @@ void ScoreSorter::doSort()         //排序输出函数
         {
         qDebug()<<data.at(i);
         qDebug()<<"-------------------------------------------------------\n";
-        this->outingdata(i); //目前排序规则的数据指到输出函数
+      
         }
     }
  }
 
-//void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
-//{
-    //QString txtMessage;
-    //QMutex mutex;
-    //mutex.lock();  //加锁
-    //QByteArray txtMessage=msg.toLocal8Bit();
-        //switch (type)
-       // {
-            //case QtDebugMsg:
-           // fprintf(stderr, "Debug: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            //break;
-            //case QtInfoMsg:
-           // fprintf(stderr, "Info: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            //break;
-           // case QtWarningMsg:
-            //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-            //break;
-            //case QtCriticalMsg:
-            //fprintf(stderr, "Critical: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-           // break;
-            //case QtFatalMsg:
-            //fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", txtMessage.constData(), context.file, context.line, context.function);
-//            abort();
-       // }
-
-   // txtMessage += QString("\r\n");
-
-    //QFile F("D:\\sorted_data.txt");
-    //if(F.open(QIODevice::WriteOnly | QIODevice::Append))
-   // {
-       // QTextStream out(&F);
-        //out<<txtMessage;
-   // }
-   // file.flush();
-   // file.close();
-    //mutex.unlock();
-//}
-
-void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)    //参考Qt助手
 {
-    QFile file("sorted_"+this->FileName);      //打开文件
-    file.open(QIODevice::ReadWrite | QIODevice::Append);
+    QString txtMessage;
+    QString strMessage=QString(txtMessage.constData())；
+    QMutex mutex;
+    mutex.lock();  
+    QByteArray txtMessage=msg.toLocal8Bit();
+    QFile file("sorted_"+datafile);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Append))
+    return -1;
     QTextStream stream(&file);
-
-    stream.setCodec("UTF-8");    //采用UTF-8编码方式
-    stream<<QString("排序后输出，当前排序第 ")<<current<<QString(" 列：")<<"\r\n";
-
-
-    for(int i=0;i<this->Listtitle.size();i++)  //这样循环输出表头
-    {
-        stream<<this->Listtitle.at(i);
-    }
-        stream<<"\r\n";
-
-    for(int i=0;i<this->data.size();i++)            //输出排序后的数据
-    {
-        for(int j=0;j<this->Listtitle.size()-1;j++)
-        {
-         stream<<this->data.at(i).stud_Data.at(j)<<"\t"<<"\t";;
-        }
-        stream<<"\n";
-    }
-    stream<<"-------------------------------------------------------"<<"r\n";
-
-    file.close();
+    qDebug().noquote().nospace()<<txtMessage;
+   file.close();
 }
+
+//void ScoreSorter::outingdata(quint8 current)   //输出到文本函数
+//{
+    //QFile file("sorted_"+this->FileName);      //打开文件
+    //file.open(QIODevice::ReadWrite | QIODevice::Append);
+   // QTextStream stream(&file);
+
+    //stream.setCodec("UTF-8");    //采用UTF-8编码方式
+    //stream<<QString("排序后输出，当前排序第 ")<<current<<QString(" 列：")<<"\r\n";
+
+
+    //for(int i=0;i<this->Listtitle.size();i++)  //这样循环输出表头
+    //{
+       // stream<<this->Listtitle.at(i);
+    //}
+       // stream<<"\r\n";
+
+   // for(int i=0;i<this->data.size();i++)            //输出排序后的数据
+    //{
+        //for(int j=0;j<this->Listtitle.size()-1;j++)
+        //{
+       //  stream<<this->data.at(i).stud_Data.at(j)<<"\t"<<"\t";;
+      //  }
+     //   stream<<"\n";
+  //  }
+   // stream<<"-------------------------------------------------------"<<"r\n";
+
+    //file.close();
+//}
 
 int main()
 {
-    //qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
+    qInstallMessageHandler(myMessageOutput);///注册MsgHandler回调函数
     QCoreApplication a(argc, argv);
     QString datafile = "D：\\data.txt";
 
