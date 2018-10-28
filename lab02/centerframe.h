@@ -31,10 +31,11 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
 
 
    public slots:
-       void setPenStyle(int penStyle);
+      void setPenStyle(int penStyle);
       void setPenWidth(int width=1);
-       void setPenColor(QColor color);
-       void clearPaint();
+      void setPenColor(QColor color);
+      void clearPaint();
+     // void savePict();
 
 
 
@@ -45,7 +46,9 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
        void on_btnTriangleClicked();
        void on_btnTextClicked();
        void on_edtTextEdited(const QString &text);
-
+       void on_btnDiamondClicked();
+      // void on_btnPictureClicked();
+       
 
    private:
        QVBoxLayout* vLayout;
@@ -56,8 +59,10 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
        QPushButton* btnEllipse;
        QPushButton* btnLine;
        QPushButton* btnTriangle;
+       //QPushButton* btnPicture;
        QPushButton* btnText;
-      QLineEdit* edtText;
+       QLineEdit* edtText;
+       QPushButton* btnDiamond;
 
 
   };

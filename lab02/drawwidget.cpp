@@ -2,6 +2,7 @@
 #include <QMouseEvent>
 #include <QPen>
 #include <QMessageBox>
+#include <QDateTime>
 
 
  DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)   //绘图区构造函数 参数parent 父窗口 该函数设置绘图区的初始参数，包括绘图类型 窗体背景以及用于绘图的QPixmap对象， 要注意的是，QPixmap对象在窗口中非可视的。
@@ -114,7 +115,27 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
   }
   QWidget::resizeEvent(event);
  }
+// void DrawWidget::pict()
+//{
+    //QImage iconImage;
+    //iconImage.load(":/res/picture.jpg");    //QImage读取图片
+    //QPixmap *newPix = new QPixmap(size());
+    //*newPix=QPixmap(*this->pix);
+   // *pix = QPixmap::fromImage(iconImage.scaledToWidth(pix->size().width()*0.5 , Qt::FastTransformation));
+   //QPainter p(newPix);
+   // p.drawPixmap (QPoint((width()-pix->width())/2,(height()-pix->width())/2), *pix);
+   // delete pix;     //删除旧图使图片可更新
+   // pix = newPix;
+   // update();
+//}
 
+//void DrawWidget::save()
+//{
+    //QDateTime current_date_time =QDateTime::currentDateTime();
+    //QString currentDate =current_date_time.toString("yyyy-MM-dd_hh-mm-ss");
+    //QString fileName=tr("D:/PictureLab02.png").arg(currentDate);
+   // this->pix->save(fileName);         //保存文件
+//}
 
  void DrawWidget::clear ()  //清除函数只需调用一个新的、干净的QPixmap对象代替pix，并调用update()重绘即可
  {
@@ -245,6 +266,28 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
   painter.drawPolygon(points);
   }
   break;
+
+      //绘制菱形图案
+
+        case ST::Diamond:{
+
+            QPointF pt11(ptEnd.x(),(ptStart.y()+ptEnd.y())/2);
+
+            QPointF pt22((ptStart.x()+ptEnd.x())/2,ptStart.y());
+
+            QPointF pt33(ptStart.x(),(ptStart.y()+ptEnd.y())/2);
+
+            QPointF pt44((ptStart.x()+ptEnd.x())/2,ptEnd.y());
+
+            QVector<QPointF> pts0;
+
+            pts0<<pt11<<pt22<<pt22<<pt33<<pt33<<pt44<<pt44<<pt11;
+
+        painter.drawPolygon(pts0);
+
+       }
+
+            break;
   case ST::Text:{
 
   if(drawnText.isEmpty()){

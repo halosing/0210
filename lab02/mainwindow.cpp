@@ -75,6 +75,12 @@ MainWindow::MainWindow(QWidget *parent)
        clearBtn->setText (tr("清除"));
        clearBtn->setToolTip(tr("清除当前画板"));
        connect (clearBtn, &QToolButton::clicked, centerFrame, &CenterFrame::clearPaint);
+      
+
+       //picBtn=new QToolButton;
+      // picBtn->setText(tr("图片"));
+       //picBtn->setToolTip("图片按钮");
+       //connect(picBtn,&QToolButton::clicked,centerFrame,&CenterFrame::savePict);
 
         //pixmap.fill (FOREGROUND_COLOR);
         //QPainter painter(&pixmap）;
@@ -88,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
        toolBar->addWidget (colorBtn);
        toolBar->addSeparator();
        toolBar->addWidget (clearBtn);
-       //toolBar->addWidget(imgBtn);
+       //toolBar->addWidget(picBtn);
 
    }
 

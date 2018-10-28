@@ -54,7 +54,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
     connect(btnRect,&QPushButton::clicked,
             this,&CenterFrame::on_btnRectClicked);
 
-    p.fill(BACKGROUND_COLOR);
+    p.fill(FOREGROUND_COLOR);
     painter.drawRect(3,3,p.size().width()-2*3,p.size().height()-2*3);
        btnRect->setIcon (QIcon(p));
 
@@ -64,7 +64,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnEllipse->setCheckable(true);
        btnEllipse->setIconSize(p.size());
 
-       p.fill(BACKGROUND_COLOR);
+       p.fill(FOREGROUND_COLOR);
        painter.drawEllipse(3,3,p.size().width()-2*3,p.size().height()-2*3);
        btnEllipse->setIcon (QIcon(p));
        connect(btnEllipse,&QPushButton::clicked,
@@ -76,7 +76,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnLine->setCheckable(true);
        btnLine->setIconSize(p.size());
 
-       p.fill(BACKGROUND_COLOR);
+       p.fill(FOREGROUND_COLOR);
        painter.drawLine(3+3,p.size().height()-2*3,p.size().width()-2*3,3+3);
        btnLine->setIcon (QIcon(p));
        connect(btnLine,&QPushButton::clicked,
@@ -88,7 +88,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnTriangle->setCheckable(true);
        btnTriangle->setIconSize(p.size());
 
-       p.fill(BACKGROUND_COLOR);
+       p.fill(FOREGROUND_COLOR);
        // 三角形的三个顶点
        QPointF pt1(3,p.size().height()-3);
        QPointF pt2(p.size().width()/2,3);
@@ -109,7 +109,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
       btnText->setCheckable(true);
       btnText->setIconSize(p.size());
 
-      p.fill(BACKGROUND_COLOR);
+      p.fill(FOREGROUND_COLOR);
       QFont font = painter.font();
       font.setFamily("Modern No. 20");
       font.setPixelSize(26);
@@ -120,6 +120,57 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
       connect(btnText,&QPushButton::clicked,
               this,&CenterFrame::on_btnTextClicked);
 
+      //菱形按钮
+
+       btnDiamond =new QPushButton(group);
+
+       btnDiamond->setToolTip("绘制菱形");
+
+       btnDiamond->setCheckable(true);
+
+       btnDiamond->setIconSize(p.size());
+
+       //菱形的四个顶点
+
+       p.fill(FOREGROUND_COLOR);
+
+       QPointF p1(p.size().width()/2,3);
+
+       QPointF p2(3,p.size().height()/2);
+
+       QPointF p3(p.size().width()/2,p.size().height()-3/2);
+
+       QPointF p4(p.size().width()-3,p.size().height()/2);
+
+       QVector<QPointF> p0;
+
+       p0<<p1<<p2<<p2<<p3<<p3<<p4<<p4<<p1;
+
+       painter.drawPolygon(p0);
+
+       btnDiamond->setIcon (QIcon(p));
+
+       connect(btnDiamond,&QPushButton::clicked,
+
+               this,&CenterFrame::on_btnDiamondClicked);
+
+
+      
+     //图片按钮
+     //btnPicture= new QPushButton(group); //新建btnPicture
+     //QPixmap pixmap(p.size());
+     //QPainter paint(&pixmap);
+    // QImage image(":/res/picture.jpg");     //用QImage读取图片
+     //QRect targetRect(0,0,p.size().width(),p.size().height());
+     //QRect sourceRect =image.rect();
+     //paint.drawImage(targetRect,image,sourceRect);
+     
+    // btnPicture->setIcon(QIcon(pixmap));
+     //btnPicture->setIconSize(p.size());
+     //btnPicture->setCheckable(true); //将图片按钮设为两种状态的按钮
+     //btnPicture->setToolTip("绘制图片");
+      //connect(btnPicture,&QPushButton::clicked,
+            //this,&CenterFrame::on_btnPictureClicked);
       // 选项Group布局
       QGridLayout *gridLayout = new QGridLayout();
       gridLayout->addWidget(btnRect,0,0);
@@ -127,9 +178,12 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
       gridLayout->addWidget(btnTriangle,1,0);
       gridLayout->addWidget(btnLine,1,1);
       gridLayout->addWidget(btnText,2,0);
+      gridLayout->addWidget(btnDiamond,2,1);
+      //gridLayout->addWidget(btnPicture,2,1); //添加图片按钮
       gridLayout->setMargin(3);
       gridLayout->setSpacing(3);
       group->setLayout(gridLayout);
+  
   }
 
 
@@ -203,7 +257,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnEllipse->setChecked(false);
        btnText->setChecked(false);
        edtText->setVisible(false);
-
+       //btnPicture->setChecked(false);//新加按钮复位
        // 然后根据设置的绘图类型重新切换按键状态
        switch (drawWidget->shapeType()) {
        case ST::Rectangle:
@@ -223,8 +277,12 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
            edtText->setVisible(true);      // 使编辑框可见
            edtText->setFocus();            // 编辑框获得输入焦点
            break;
-       default:
-           break;
+        //case ST::Pict:
+          // btnPicture->setChecked(true);
+           //break;
+           default:
+        break;
+      
        }
    }
 
@@ -251,6 +309,11 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
    {
        drawWidget->clear();
    }
+   //void CenterFrame::savePict()
+// {
+   // drawWidget->save();
+ //}
+
 
 
    void CenterFrame::on_btnRectClicked()  //绘制矩形按键响应槽函数 该函数的主要任务有2个， 1、设置界面按键状态，其他按键需要恢复未选定状态 2、设置绘制图形类别为矩形(ST::Rectangle
@@ -300,6 +363,17 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        }
    }
 
+   //void CenterFrame::on_btnPictureClicked()   //绘制图片响应槽函数
+
+ //{
+ // if(btnPicture->isChecked()){
+   // drawWidget->pict() ;          
+    //updateButtonStatus();
+ // }else{
+  //  drawWidget->setShapeType(ST::None);
+ // }
+// }
+
    void CenterFrame::on_btnTextClicked()  //绘制文本按键响应槽函数 该函数除包括矩形响应槽函数的基本功能外，需要设定用户输入文本框的状态 1、设置界面按键状态，其他按键需要恢复未选定状态 2、设置绘制图形类别为矩形(ST::Triangle) 3、显示或隐藏文本框，并使文本框在显示时获得输入焦点
 
    {
@@ -311,6 +385,26 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
            drawWidget->setShapeType(ST::None);
        }
    }
+
+   void CenterFrame::on_btnDiamondClicked()
+
+    {
+
+        if(btnDiamond->isChecked()){
+
+            drawWidget->setShapeType(ST::Diamond);
+
+
+
+            updateButtonStatus();
+
+        }else{
+
+            drawWidget->setShapeType(ST::None);
+
+        }
+
+    }
    void CenterFrame::on_edtTextEdited(const QString &text)  //输入文本响应槽函数 参数text 文本内容
 
    {

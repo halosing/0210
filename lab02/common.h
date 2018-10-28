@@ -10,7 +10,8 @@
         Triangle     = 0x01<<3,
         Diamond      = 0x01<<4,
         Text         = 0x01<<5,
-        TypeMask     = 0x0f
+        TypeMask     = 0x0f,
+       // Pict = 0x01<<6 ,  //添加Pict
     };
     }
 
