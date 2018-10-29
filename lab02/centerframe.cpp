@@ -312,10 +312,6 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
    {
        drawWidget->clear();
    }
-   //void CenterFrame::savePict()
-// {
-   // drawWidget->save();
- //}
 
 
 

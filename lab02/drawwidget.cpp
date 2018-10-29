@@ -120,8 +120,8 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
 {
     QImage iconImage;
     QString filename=QFileDialog::getOpenFileName(this,tr("选择图片"),"",tr("Images (*.png *.bmp *.jpg)")); //QImage读取图片
-    //iconImage.load(filename);
-    QPixmap *newPix = new QPixmap(size());//iconImage.load("D:protect/res/PictureLab02.jpg");
+    iconImage.load(filename);
+    QPixmap *newPix = new QPixmap(size());
     *newPix = QPixmap(*this->pix);
     *pix = QPixmap::fromImage(iconImage.scaledToWidth(pix->size().width()*0.5 , Qt::FastTransformation));
     QPainter p(newPix);
