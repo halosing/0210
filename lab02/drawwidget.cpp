@@ -3,6 +3,7 @@
 #include <QPen>
 #include <QMessageBox>
 #include <QDateTime>
+#include<QFileDialog>
 
 
  DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)   //绘图区构造函数 参数parent 父窗口 该函数设置绘图区的初始参数，包括绘图类型 窗体背景以及用于绘图的QPixmap对象， 要注意的是，QPixmap对象在窗口中非可视的。
@@ -115,26 +116,27 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
   }
   QWidget::resizeEvent(event);
  }
-// void DrawWidget::pict()
-//{
-    //QImage iconImage;
-    //iconImage.load(":/res/picture.jpg");    //QImage读取图片
-    //QPixmap *newPix = new QPixmap(size());
-    //*newPix=QPixmap(*this->pix);
-   // *pix = QPixmap::fromImage(iconImage.scaledToWidth(pix->size().width()*0.5 , Qt::FastTransformation));
-   //QPainter p(newPix);
-   // p.drawPixmap (QPoint((width()-pix->width())/2,(height()-pix->width())/2), *pix);
-   // delete pix;     //删除旧图使图片可更新
-   // pix = newPix;
-   // update();
-//}
+ void DrawWidget::pict()  //
+{
+    QImage iconImage;
+    QString filename=QFileDialog::getOpenFileName(this,tr("选择图片"),"",tr("Images (*.png *.bmp *.jpg)")); //QImage读取图片
+    //iconImage.load(filename);
+    QPixmap *newPix = new QPixmap(size());//iconImage.load("D:protect/res/PictureLab02.jpg");
+    *newPix = QPixmap(*this->pix);
+    *pix = QPixmap::fromImage(iconImage.scaledToWidth(pix->size().width()*0.5 , Qt::FastTransformation));
+    QPainter p(newPix);
+    p.drawPixmap (QPoint((width()-pix->width())/2,(height()-pix->width())/2), *pix);
+    delete pix;     //删除旧图使图片可更新
+    pix = newPix;
+    update();
+}
 
 //void DrawWidget::save()
 //{
     //QDateTime current_date_time =QDateTime::currentDateTime();
     //QString currentDate =current_date_time.toString("yyyy-MM-dd_hh-mm-ss");
-    //QString fileName=tr("D:/PictureLab02.png").arg(currentDate);
-   // this->pix->save(fileName);         //保存文件
+    //QString fileName=tr("D:/PictLab02.png").arg(currentDate);
+    //this->pix->save(fileName);         //保存文件
 //}
 
  void DrawWidget::clear ()  //清除函数只需调用一个新的、干净的QPixmap对象代替pix，并调用update()重绘即可

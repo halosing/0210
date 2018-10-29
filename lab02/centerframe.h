@@ -47,8 +47,8 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
        void on_btnTextClicked();
        void on_edtTextEdited(const QString &text);
        void on_btnDiamondClicked();
-      // void on_btnPictureClicked();
-       
+       void on_btnPictureClicked();
+
 
    private:
        QVBoxLayout* vLayout;
@@ -59,7 +59,7 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
        QPushButton* btnEllipse;
        QPushButton* btnLine;
        QPushButton* btnTriangle;
-       //QPushButton* btnPicture;
+       QPushButton* btnPicture;
        QPushButton* btnText;
        QLineEdit* edtText;
        QPushButton* btnDiamond;

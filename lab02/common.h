@@ -11,7 +11,7 @@
         Diamond      = 0x01<<4,
         Text         = 0x01<<5,
         TypeMask     = 0x0f,
-       // Pict = 0x01<<6 ,  //添加Pict
+       Pict = 0x01<<6 ,  //添加Pict
     };
     }
 
@@ -20,3 +20,4 @@
 
 
     #endif // COMMON_H
+

@@ -19,7 +19,7 @@
        void setShapeType(ST::ShapeType type);
        ST::ShapeType shapeType();
        void setDrawnText(QString text);
-      //void Pict(QImage iconImage);
+       void Pict(QImage iconImage);
 
    protected:
        void mousePressEvent (QMouseEvent *e);
@@ -36,7 +36,7 @@
        void setStyle(int);
        void setWidth(int);
        void setColor(QColor);
-       //void pict();//该函数添加需要的图片
+       void pict();//该函数添加需要的图片
        //void save();//该函数保存更新后的图片
        void clear();
 
@@ -52,6 +52,55 @@
        QString drawnText;
    };
    #endif // DRAWWIDGET_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
