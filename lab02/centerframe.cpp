@@ -1,13 +1,13 @@
 #include "centerframe.h"
 #include "drawwidget.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGroupBox>
-#include <QPushButton>
-#include <QPainter>
-#include <QPixmap>
-#include <QGridLayout>
-#include <QLineEdit>
+#include <QVBoxLayout>       //垂直布局类
+#include <QHBoxLayout>      //水平布局类
+#include <QGroupBox>        //分组控件类
+#include <QPushButton>      //下压按钮类
+#include <QPainter>         //执行绘图操作类
+#include <QPixmap>          //在屏幕上显示图像和控件中显示类
+#include <QGridLayout>      //网格布局类
+#include <QLineEdit>        //单行文本框类
 #include <QDebug>
 
 CenterFrame::CenterFrame(QWidget *parent) : QFrame(parent)
@@ -32,31 +32,31 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
 {
 
     // 选项Group
-    group = new QGroupBox(this);
-    group->setTitle(tr("选项"));
+    group = new QGroupBox(this); //分组控件
+    group->setTitle(tr("选项"));  //控件名称
 
-    int btnWidth=32;
+    int btnWidth=32;  //设定按钮宽和高
     int btnHeight=32;
     // 准备绘制按钮图标
-    QPixmap p(btnWidth-2, btnHeight-2);
-    QPainter painter(&p);
-    QPen pen(BACKGROUND_COLOR);
-    pen.setWidthF(2);
-    pen.setStyle(Qt::DotLine);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(pen);
+    QPixmap p(btnWidth-3, btnHeight-3); //设定图标宽和高
+    QPainter painter(&p);        //创建一个画笔
+    QPen pen(FOREGROUND_COLOR);  //设置绘制图标按钮的画笔颜色为白色
+    pen.setWidthF(2);            //设置绘制图标按钮的画笔宽度
+    pen.setStyle(Qt::DotLine);   //设置绘制图标按钮的画笔线型
+    painter.setRenderHint(QPainter::Antialiasing); //设置抗锯齿模式进行图标绘制
+    painter.setPen(pen);         //使用画笔
 
     // 矩形按钮
     btnRect = new QPushButton(group);
     btnRect->setToolTip("绘制矩形");
-    btnRect->setCheckable(true);
-    btnRect->setIconSize(p.size());
-    connect(btnRect,&QPushButton::clicked,
+    btnRect->setCheckable(true);  //两种状态按钮
+    btnRect->setIconSize(p.size());//设置按钮图标的大小
+    connect(btnRect,&QPushButton::clicked,    //关联信号与槽函数，当按钮被点击后执行槽函数
             this,&CenterFrame::on_btnRectClicked);
 
-    p.fill(FOREGROUND_COLOR);
-    painter.drawRect(3,3,p.size().width()-2*3,p.size().height()-2*3);
-       btnRect->setIcon (QIcon(p));
+    p.fill(BACKGROUND_COLOR);   //设置按钮图标背景色为红色
+    painter.drawRect(3,3,p.size().width()-2*3,p.size().height()-2*3);//绘制矩形图标，左上角坐标（3，3）
+       btnRect->setIcon (QIcon(p));//设置按钮的图标
 
        // 圆形按钮
        btnEllipse = new QPushButton(group);
@@ -64,7 +64,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnEllipse->setCheckable(true);
        btnEllipse->setIconSize(p.size());
 
-       p.fill(FOREGROUND_COLOR);
+       p.fill(BACKGROUND_COLOR);
        painter.drawEllipse(3,3,p.size().width()-2*3,p.size().height()-2*3);
        btnEllipse->setIcon (QIcon(p));
        connect(btnEllipse,&QPushButton::clicked,
@@ -76,7 +76,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnLine->setCheckable(true);
        btnLine->setIconSize(p.size());
 
-       p.fill(FOREGROUND_COLOR);
+       p.fill(BACKGROUND_COLOR);
        painter.drawLine(3+3,p.size().height()-2*3,p.size().width()-2*3,3+3);
        btnLine->setIcon (QIcon(p));
        connect(btnLine,&QPushButton::clicked,
@@ -88,7 +88,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
        btnTriangle->setCheckable(true);
        btnTriangle->setIconSize(p.size());
 
-       p.fill(FOREGROUND_COLOR);
+       p.fill(BACKGROUND_COLOR);
        // 三角形的三个顶点
        QPointF pt1(3,p.size().height()-3);
        QPointF pt2(p.size().width()/2,3);
@@ -109,7 +109,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
       btnText->setCheckable(true);
       btnText->setIconSize(p.size());
 
-      p.fill(FOREGROUND_COLOR);
+      p.fill(BACKGROUND_COLOR);
       QFont font = painter.font();
       font.setFamily("Modern No. 20");
       font.setPixelSize(26);
@@ -132,7 +132,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
 
        //菱形的四个顶点
 
-       p.fill(FOREGROUND_COLOR);
+       p.fill(BACKGROUND_COLOR);
 
        QPointF p1(p.size().width()/2,3);
 
@@ -155,23 +155,24 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
                this,&CenterFrame::on_btnDiamondClicked);
 
 
-     //图片按钮
-     btnPicture= new QPushButton(group); //新建btnPicture
-     btnPicture->setCheckable(true); //将图片按钮设为两种状态的按钮
-     btnPicture->setIconSize(p.size());
-     btnPicture->setToolTip("绘制需要添加的图片");
-     QPixmap pixmap(p.size());
-     QPainter paint(&pixmap);
-     QImage image("D:/protect/res/picture02.jpg");     //用QImage读取图片
-     QRect targetRect(0,0,p.size().width(),p.size().height());
-     QRect sourceRect =image.rect();
-     paint.drawImage(targetRect,image,sourceRect);
+       //图片按钮
+       btnPicture= new QPushButton(group); //新建btnPicture按钮，父对象为QGroupBox组框
+       btnPicture->setCheckable(true); //将图片按钮设为两种状态的按钮，使能可选中功能
+       btnPicture->setIconSize(p.size());//设置图标大小
+       btnPicture->setToolTip("绘制需要添加的图片");
        connect(btnPicture,&QPushButton::clicked,
             this,&CenterFrame::on_btnPictureClicked);
-       btnPicture->setIcon(QIcon(pixmap));
+       QPixmap pixmap(p.size());  //设置图标宽和高
+       QPainter paint(&pixmap);   //创建一个画笔
+       //pixmap.load("D:/protect/res/picture02.jpg");
+       QImage image("D:/protect/res/picture02.jpg");     //创建QImage对象，它可以直接存取操作像素数据，这就是用QImage而不用Qpixmap的原因
+       QRect tRect(0,0,p.size().width(),p.size().height());  //绘制图片的坐标(0,0),大小和p一样
+       QRect sRect =image.rect();
+       paint.drawImage(tRect,image,sRect);  //绘制路径下的图片
+       btnPicture->setIcon(QIcon(pixmap)); //设置按钮图标
 
-              // 选项Group布局
-      QGridLayout *gridLayout = new QGridLayout();
+      // 选项Group布局，在Group中网格布局
+      QGridLayout *gridLayout = new QGridLayout();//新建网格布局父类为CenterFrame
       gridLayout->addWidget(btnRect,0,0);
       gridLayout->addWidget(btnEllipse,0,1);
       gridLayout->addWidget(btnTriangle,1,0);
@@ -179,9 +180,9 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
       gridLayout->addWidget(btnText,2,0);
       gridLayout->addWidget(btnDiamond,2,1);  //添加菱形按钮
       gridLayout->addWidget(btnPicture,3,0); //添加图片按钮
-      gridLayout->setMargin(3);
-      gridLayout->setSpacing(3);
-      group->setLayout(gridLayout);
+      gridLayout->setMargin(3);   //控件与窗体的左右边距为3
+      gridLayout->setSpacing(3);  //各个控件之间的上下边距
+      group->setLayout(gridLayout);//将QGroupBox组框设置为以上网格布局方式
 
   }
 
@@ -190,8 +191,8 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
 
   {
 
-      edtText = new QLineEdit();
-      edtText->setToolTip(tr("输入需要绘制的文本"));   // 设置工具提示
+       edtText = new QLineEdit();
+       edtText->setToolTip(tr("输入需要绘制的文本"));   // 设置工具提示
        edtText->setVisible(false);                     //  初始时，文本框设为隐藏
        edtText->setClearButtonEnabled(true);           //  在编辑框中显示一个清除按键
        edtText->setMaximumWidth(91);
@@ -312,6 +313,10 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
    {
        drawWidget->clear();
    }
+   //void CenterFrame::savePict()
+// {
+   // drawWidget->save();
+ //}
 
 
 
@@ -319,8 +324,8 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
 
    {
        if(btnRect->isChecked()){
-           updateButtonStatus();
-           drawWidget->setShapeType(ST::Rectangle);
+           updateButtonStatus();   //设置界面按键状态
+           drawWidget->setShapeType(ST::Rectangle);//设置绘图类型为矩形
        }else{
            drawWidget->setShapeType(ST::None);
        }
@@ -366,9 +371,10 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
 
  {
  if(btnPicture->isChecked()){
-    drawWidget->pict() ;
-    updateButtonStatus();
-  }else{
+     drawWidget->pict();
+     updateButtonStatus(); //更新按键状态
+
+ }else{
     drawWidget->setShapeType(ST::None);
  }
    }
@@ -409,6 +415,7 @@ void CenterFrame::createUserCommandArea()  //创建绘图框的用户命令区 �
    {
        drawWidget->setDrawnText(text);
    }
+
 
 
 

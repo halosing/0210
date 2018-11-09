@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include<QFileDialog>
+#include<QPixmap>
 
 
  DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)   //绘图区构造函数 参数parent 父窗口 该函数设置绘图区的初始参数，包括绘图类型 窗体背景以及用于绘图的QPixmap对象， 要注意的是，QPixmap对象在窗口中非可视的。
@@ -13,8 +14,11 @@
   canDraw = false;
   setAutoFillBackground (true); //设置窗体背景色
   setPalette (QPalette(BACKGROUND_COLOR));
+  pia = new QPixmap(size());
+  pia->fill(Qt::transparent);
+
   pix = new QPixmap(size()); //此QPixmap对象用来准备随时接受绘制的内容
- pix->fill (BACKGROUND_COLOR); //填充背景色为白色
+  pix->fill (BACKGROUND_COLOR); //填充背景色为白色
  setMinimumSize (600, 400); //设置绘制区窗体的最小尺寸
 
 }
@@ -23,7 +27,9 @@ DrawWidget::~DrawWidget()   //销毁绘图区 绘图区是一个QPixmap对象，
 
 {
  // 注意：一定要删除pix指针
- delete pix;
+ delete pia;
+    delete pix;
+
 }
 
 void DrawWidget::setStyle (int s)
@@ -98,8 +104,14 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
  }
  void DrawWidget::paintEvent (QPaintEvent *)
  {
-  QPainter painter(this);
-  painter.drawPixmap (QPoint(0, 0), *pix);
+
+
+     QPainter painter(this);
+     //painter.drawPixmap(this->width()/4,this->height()/4,this->width()/2,this->height()/2,*pia);
+     painter.drawPixmap (this->width()/4,this->height()/4,this->width()/2,this->height()/2,*pia);
+     painter.drawPixmap (QPoint(0, 0), *pix);
+
+
  }
 
 
@@ -108,28 +120,36 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
   if(height () > pix->height () || width() > pix->width ())
   {
   QPixmap *newPix = new QPixmap(size());
-  newPix->fill (BACKGROUND_COLOR);
+  newPix->fill (Qt::transparent);
   QPainter p(newPix);
   p.drawPixmap (QPoint(0, 0), *pix);
   delete pix; //一定要删除原来的对象，否则会出现内存泄漏
-  pix = newPix;
+ pix = newPix;
   }
   QWidget::resizeEvent(event);
  }
  void DrawWidget::pict()  //
-{
-    QImage iconImage;
-    QString filename=QFileDialog::getOpenFileName(this,tr("选择图片"),"",tr("Images (*.png *.bmp *.jpg)")); //QImage读取图片
-    iconImage.load(filename);
-    QPixmap *newPix = new QPixmap(size());
-    *newPix = QPixmap(*this->pix);
-    *pix = QPixmap::fromImage(iconImage.scaledToWidth(pix->size().width()*0.5 , Qt::FastTransformation));
-    QPainter p(newPix);
-    p.drawPixmap (QPoint((width()-pix->width())/2,(height()-pix->width())/2), *pix);
-    delete pix;     //删除旧图使图片可更新
-    pix = newPix;
-    update();
-}
+ {
+   QString filename=QFileDialog::getOpenFileName(this,tr("选择图片"),"D:/protect/res",tr("Images (*.png *.bmp *.jpg)")); //QImage读取图片
+         if(filename.isEmpty())
+         {
+             QMessageBox mo;
+            mo.warning(this,"错误","未选择图片！");
+             return;
+        }
+    pia->load(filename);
+        //iconImage.load(filename);
+         //QPixmap *newPia = new QPixmap(size());
+         //*newPia = QPixmap(*this->pia);
+        // *pia = QPixmap::fromImage(iconImage.scaledToWidth(pia->size().width()*0.8 , Qt::FastTransformation));
+        // *pia = QPixmap::fromImage(iconImage.scaledToHeight(pia->size().width()*0.8 , Qt::FastTransformation));
+         //QPainter p(newPia);
+         //p.drawPixmap (QPoint((width()-pia->width())/6,(height()-pia->width())/6), *pia);
+         //delete pia;     //删除旧图使图片可更新
+         //pia = newPia;
+        // update();
+
+
 
 //void DrawWidget::save()
 //{
@@ -137,12 +157,14 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
     //QString currentDate =current_date_time.toString("yyyy-MM-dd_hh-mm-ss");
     //QString fileName=tr("D:/PictLab02.png").arg(currentDate);
     //this->pix->save(fileName);         //保存文件
-//}
+}
 
  void DrawWidget::clear ()  //清除函数只需调用一个新的、干净的QPixmap对象代替pix，并调用update()重绘即可
  {
   // 清除绘图内容，简单的用背景色填充整个画布即可
-  pix->fill(BACKGROUND_COLOR);
+   pia->fill(BACKGROUND_COLOR);
+     pix->fill(BACKGROUND_COLOR);
+
   update ();
  }
 
@@ -316,3 +338,4 @@ void DrawWidget::mousePressEvent (QMouseEvent *e)
 
   painter.end ();
  }
+

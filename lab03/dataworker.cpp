@@ -87,7 +87,7 @@ void dataWorker::doRequest()
  * 该函数将请求年月插入模板中，获得实际数据页面的链接地址。
  */
 QString dataWorker::requestUrl()
-{    
+{
     QString r =
             QString("https://lishi.tianqi.com/nanjing/%1.html").arg(_requestDate);
     qDebug()<<r;
@@ -223,8 +223,8 @@ void dataWorker::httpsFinished(QNetworkReply *reply)
         reply->deleteLater();
         reply = Q_NULLPTR;
         return;
-    }    
-    if(v != 200){        
+    }
+    if(v != 200){
         error = QString("访问出错：代码 %1,原因 %2").arg(v).arg(reply->errorString());
         emit httpRequestError(error);
         reply->deleteLater();

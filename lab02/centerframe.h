@@ -63,6 +63,7 @@ class CenterFrame : public QFrame    //用户绘图框架类,本类是一个窗�
        QPushButton* btnText;
        QLineEdit* edtText;
        QPushButton* btnDiamond;
+       QString iconImageFile="D:/protect/res/picture02.jpg";
 
 
   };

@@ -1,6 +1,7 @@
 
 
 
+
 #include "mainwindow.h"
 #include <common.h>
 #include <QToolBar>
@@ -121,6 +122,7 @@ MainWindow::MainWindow(QWidget *parent)
         colorBtn->setIcon (QIcon(p));
        }
    }
+
 
 
 
