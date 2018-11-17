@@ -5,8 +5,8 @@
 #include <QtCharts>
 
 
-namespace Ui {
-class mainWidget;
+namespace Ui {  //命名空间为Ui
+class mainWidget;       //声明主窗口类
 }
 
 //QT_CHARTS_BEGIN_NAMESPACE
@@ -17,7 +17,7 @@ class mainWidget;
 
 QT_CHARTS_USE_NAMESPACE
 
-class dataWorker;
+class dataWorker;//声明数据获取与处理类
 class QDateTime;
 
 class mainWidget : public QWidget
